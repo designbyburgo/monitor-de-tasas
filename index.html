@@ -294,12 +294,80 @@ details{border-radius:20px;border:0;box-shadow:0 0 0 1px rgba(14,26,58,.06)}
 .bar{background:linear-gradient(to top,var(--bg) 65%,transparent)}
 @media (max-width:360px){.rate .v{font-size:1.1rem}.rate{padding-right:11px;margin-right:11px}}
 @media (prefers-color-scheme:dark){.tag{color:#06210f}}
+
+/* ═════════ v3.2 · pantalla de inicio ═════════ */
+body[data-view=home] #calcView{display:none}
+body[data-view=calc] #homeView{display:none}
+.top .tl{display:flex;align-items:center;gap:6px}
+.back{width:40px;height:40px;margin-left:-10px;border-radius:50%;display:grid;place-items:center;color:var(--hd-link)}
+.back svg{width:22px;height:22px}
+.back:active{background:rgba(255,255,255,.1)}
+.hh{padding-bottom:30px}
+.hwel{font-size:.86rem;font-weight:600;color:var(--hd-link);margin:6px 0 4px}
+.hdate{font-size:2.3rem;font-weight:800;letter-spacing:-.045em;line-height:1.02;color:var(--hd-ink);margin:0 0 20px}
+.hdate span{display:block;color:var(--hd-mute);font-weight:600}
+.hero{display:grid;gap:10px}
+.hc{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:26px;padding:20px 22px;text-align:left;color:var(--hd-ink)}
+.hc .k{font-size:1rem;font-weight:700;color:var(--hd-ink)}
+.hc .u{font-size:.78rem;color:var(--hd-mute);margin-top:4px}
+.hc .v{font-family:var(--mono);font-size:2.9rem;font-weight:500;letter-spacing:-.07em;line-height:1;white-space:nowrap}
+.hc.usd .v,.hc.usd .k{color:var(--hd-link)}
+.hc.eur{background:rgba(160,120,255,.13);border-color:rgba(183,154,255,.32)}
+.hc.eur .k,.hc.eur .v{color:#c9b8ff}
+.hc.empty .v{font-size:1.4rem;color:var(--hd-amber);opacity:.85}
+.hupd{display:flex;align-items:center;gap:8px;margin:16px 2px 0;font-size:.8rem;font-weight:500;color:var(--hd-mute)}
+.hupd i{width:7px;height:7px;border-radius:50%;background:#4cd07d;box-shadow:0 0 0 3px rgba(76,208,125,.2)}
+.hupd.old i{background:var(--hd-amber);box-shadow:0 0 0 3px rgba(243,198,77,.2)}
+.happ{padding-top:0}
+.hmore{font-size:.8rem;font-weight:700;color:var(--ink3);margin:22px 4px 8px}
+.hlist{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hrow{display:block;width:100%;text-align:left;background:var(--card);border-radius:18px;padding:12px 14px;box-shadow:0 0 0 1px rgba(14,26,58,.06)}
+.hrow .hk{display:block;font-size:.74rem;font-weight:600;color:var(--ink3)}
+.hrow .hk small{display:none}
+.hrow .hv{display:block;font-family:var(--mono);font-size:1.12rem;font-weight:500;letter-spacing:-.05em;color:var(--ink);margin-top:3px}
+.hrow.bn .hv{color:var(--bn)}
+.hrow.gp .hv{color:var(--accent)}
+.hrow.empty .hv{font-size:.9rem;color:var(--warn);font-family:var(--sans);font-weight:700;letter-spacing:0}
+@media (max-width:360px){.hc .v{font-size:2.5rem}.hdate{font-size:2rem}}
+.hstamp{display:flex;justify-content:space-between;align-items:center;margin:14px 4px 0;font-size:.76rem;color:var(--ink3)}
+.hstamp button{color:var(--accent);font-size:.8rem;font-weight:600;padding:8px 0}
+@media (max-width:360px){.hc .v{font-size:1.8rem}}
 </style>
 </head>
-<body>
-<header class="hd"><div class="hd-in">
+<body data-view="home">
+<div id="homeView">
+<header class="hd hh"><div class="hd-in">
   <div class="top">
     <div class="title">Tasas</div>
+    <button class="refresh" id="refresh2" aria-label="Actualizar tasas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+      Actualizar
+    </button>
+  </div>
+  <div class="hwel">Bienvenido</div>
+  <div class="hdate" id="hdate"></div>
+  <div class="hero" id="hero"></div>
+  <div class="hupd" id="hupd"></div>
+</div></header>
+<div class="app happ">
+  <div class="hmore">Más tasas</div>
+  <div class="hlist" id="hlist"></div>
+  <div class="hstamp"><span id="stamp2">Sin actualizar</span><button id="editRates2">Editar tasas</button></div>
+</div>
+<div class="bar"><div class="bar-in">
+  <button class="btn primary" id="goCalc">Abrir calculadora
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</div></div>
+</div>
+
+<div id="calcView">
+<header class="hd"><div class="hd-in">
+  <div class="top">
+    <div class="tl">
+      <button class="back" id="back" aria-label="Volver al inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="title">Calculadora</div>
+    </div>
     <button class="refresh" id="refresh" aria-label="Actualizar tasas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
       Actualizar
@@ -342,6 +410,7 @@ details{border-radius:20px;border:0;box-shadow:0 0 0 1px rgba(14,26,58,.06)}
   <button class="btn ghost" id="reset" aria-label="Limpiar monto">Limpiar</button>
   <button class="btn primary" id="copy">Copiar resumen</button>
 </div></div>
+</div>
 
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-label="Tasas">
@@ -453,10 +522,10 @@ function renderRates(){
   if(bcv&&bin){g.hidden=false;g.innerHTML=`<span>Brecha Binance vs BCV</span><b>${pct(bin/bcv-1)}</b>`}else g.hidden=true;
 }
 function renderStamp(){
-  if(!S.ts){$('stamp').textContent='Sin actualizar · toca Actualizar';return}
+  if(!S.ts){$('stamp').textContent=$('stamp2').textContent='Sin actualizar · toca Actualizar';return}
   const m=Math.round((Date.now()-new Date(S.ts))/60000);
   const t=m<1?'ahora mismo':m<60?`hace ${m} min`:m<1440?`hace ${Math.round(m/60)} h`:`hace ${Math.round(m/1440)} d`;
-  $('stamp').textContent='Actualizado '+t;
+  $('stamp').textContent=$('stamp2').textContent='Actualizado '+t;
 }
 
 function renderResult(){
@@ -584,7 +653,28 @@ function renderConv(r){
     el.hidden=false;el.textContent=`= ${bs(r.target)} a tasa ${REF[S.refRate]} (${f(refVal())})`;
   } else el.hidden=true;
 }
-function renderAll(){renderRates();renderStamp();renderAnchor();renderResult()}
+function renderHome(){
+  const bcv=num(S.bcv),eur=num(S.eur),bin=num(S.bin),up=num(S.usdt),ot=num(S.otra);
+  const now=new Date();
+  const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
+  $('hdate').innerHTML=cap(now.toLocaleDateString('es-VE',{weekday:'long'}))+'<span>'+now.toLocaleDateString('es-VE',{day:'numeric',month:'long'})+'</span>';
+  const hc=(cls,k,v,u,key)=>`<button class="hc ${cls} ${v?'':'empty'}" data-open="${key}"><div><div class="k">${k}</div><div class="u">${u}</div></div><div class="v">${v?f(v,2):'Poner'}</div></button>`;
+  $('hero').innerHTML=hc('usd','Dólar BCV',bcv,'Bs por 1 $','bcv')+hc('eur','Euro BCV',eur,'Bs por 1 €','eur');
+  const h2=$('hupd');
+  if(S.ts){
+    const d=new Date(S.ts), same=d.toDateString()===now.toDateString();
+    const hr=d.toLocaleTimeString('es-VE',{hour:'numeric',minute:'2-digit'});
+    h2.className='hupd'+((now-d)>6*3600000?' old':'');
+    h2.innerHTML='<i></i><span>Actualizado '+(same?'hoy':d.toLocaleDateString('es-VE',{day:'numeric',month:'short'}))+' · '+hr+'</span>';
+  }else{h2.className='hupd old';h2.innerHTML='<i></i><span>Sin actualizar · toca Actualizar</span>'}
+  const row=(cls,k,v,key,fmtv)=>`<button class="hrow ${cls} ${v?'':'empty'}" data-open="${key}"><span class="hk">${k}</span><span class="hv">${v?fmtv(v):'Poner'}</span></button>`;
+  let h=row('bn','Binance (Bs/USDT)',bin,'bin',v=>f(v,2));
+  if(bcv&&bin)h+=`<div class="hrow gp"><span class="hk">Brecha vs BCV</span><span class="hv">${pct(bin/bcv-1)}</span></div>`;
+  h+=row('','USDT cuesta',up,'usdt',v=>'$'+f(v,3));
+  if(ot)h+=row('','Otra',ot,'otra',v=>f(v,2));
+  $('hlist').innerHTML=h;
+}
+function renderAll(){renderRates();renderStamp();renderHome();renderAnchor();renderResult()}
 
 // ════════════ EVENTOS ════════════
 $('seg').addEventListener('click',e=>{
@@ -614,6 +704,7 @@ document.addEventListener('click',e=>{
   const o=e.target.closest('[data-open]');if(o)openSheet(o.dataset.open);
 });
 $('editRates').addEventListener('click',()=>openSheet('all'));
+$('editRates2').addEventListener('click',()=>openSheet('all'));
 
 // Hoja de tasas
 const FIELDS={'s-bcv':'bcv','s-eur':'eur','s-bin':'bin','s-usdt':'usdt','s-otra':'otra'};
@@ -636,7 +727,7 @@ function info(){
 Object.entries(FIELDS).forEach(([id,k])=>{
   $(id).addEventListener('input',e=>{
     e.target.value=e.target.value.replace(/[^\d.,]/g,'');
-    S[k]=e.target.value;save();renderRates();renderAnchor();renderResult();
+    S[k]=e.target.value;save();renderRates();renderHome();renderAnchor();renderResult();
   });
 });
 $('s-url').addEventListener('input',e=>{S.worker=e.target.value.trim();save()});
@@ -665,7 +756,7 @@ async function binanceDirecto(){
 async function refresh(silent){
   const url=(S.worker||WORKER_URL||'').trim();
   if(!url){ if(!silent){toast('Falta la URL del Worker');openSheet('all');setTimeout(()=>$('s-url').focus(),300)} return }
-  const btn=$('refresh');btn.classList.add('spin');
+  const btns=[$('refresh'),$('refresh2')];btns.forEach(b=>b.classList.add('spin'));
   try{
     const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),12000);
     const r=await fetch(url,{signal:ctl.signal});clearTimeout(t);
@@ -687,9 +778,10 @@ async function refresh(silent){
     else throw new Error('sin datos');
   }catch(e){
     toast('No pude traer las tasas. Pon las tuyas a mano.');
-  }finally{btn.classList.remove('spin')}
+  }finally{btns.forEach(b=>b.classList.remove('spin'))}
 }
 $('refresh').addEventListener('click',()=>refresh(false));
+$('refresh2').addEventListener('click',()=>refresh(false));
 
 // Copiar resumen
 $('copy').addEventListener('click',async()=>{
@@ -709,6 +801,23 @@ $('copy').addEventListener('click',async()=>{
 
 let tt;
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2600)}
+
+
+// ════════════ NAVEGACIÓN inicio ⇄ calculadora ════════════
+function setView(v){document.body.dataset.view=v;window.scrollTo(0,0)}
+function viewFromHash(){try{return location.hash==='#calc'?'calc':'home'}catch(e){return 'home'}}
+$('goCalc').addEventListener('click',()=>{
+  try{history.pushState({v:'calc'},'','#calc')}catch(e){}   // si el entorno no lo permite, igual abre
+  setView('calc');
+});
+$('back').addEventListener('click',()=>{
+  try{ if(history.state&&history.state.v==='calc'){history.back();return} }catch(e){}
+  try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+  setView('home');
+});
+window.addEventListener('popstate',()=>setView(viewFromHash()));
+window.addEventListener('hashchange',()=>setView(viewFromHash()));
+setView(viewFromHash());
 
 // ════════════ INICIO ════════════
 $('amount').value=S.amount||'';
