@@ -296,8 +296,9 @@ details{border-radius:20px;border:0;box-shadow:0 0 0 1px rgba(14,26,58,.06)}
 @media (prefers-color-scheme:dark){.tag{color:#06210f}}
 
 /* ═════════ v3.2 · pantalla de inicio ═════════ */
-body[data-view=home] #calcView{display:none}
-body[data-view=calc] #homeView{display:none}
+#monitorView,#quickView{display:none}
+body[data-view=monitor] #monitorView,body[data-view=quick] #quickView{display:block}
+body[data-view=monitor] #homeView,body[data-view=quick] #homeView{display:none}
 .top .tl{display:flex;align-items:center;gap:6px}
 .back{width:40px;height:40px;margin-left:-10px;border-radius:50%;display:grid;place-items:center;color:var(--hd-link)}
 .back svg{width:22px;height:22px}
@@ -332,6 +333,36 @@ body[data-view=calc] #homeView{display:none}
 .hstamp{display:flex;justify-content:space-between;align-items:center;margin:14px 4px 0;font-size:.76rem;color:var(--ink3)}
 .hstamp button{color:var(--accent);font-size:.8rem;font-weight:600;padding:8px 0}
 @media (max-width:360px){.hc .v{font-size:1.8rem}}
+
+/* ═════════ v3.3 · calculadora rápida + botones de inicio ═════════ */
+.btn.sec{background:var(--card);color:var(--ink);box-shadow:0 0 0 1px rgba(14,26,58,.1)}
+.bar-in .btn{font-size:.9rem;padding:0 10px;white-space:nowrap}
+.qh{padding-bottom:58px}
+.qout{margin-top:8px}
+.qlab{font-size:.86rem;font-weight:600;color:var(--hd-mute);min-height:1.2em}
+.qlab button{color:var(--hd-link);font-weight:700;text-decoration:underline}
+.qval{font-family:var(--mono);font-size:3rem;font-weight:500;letter-spacing:-.07em;line-height:1.08;margin-top:8px;color:var(--hd-ink);word-break:break-word}
+.qval small{font-size:1.3rem;color:var(--hd-mute);letter-spacing:-.02em;margin:0 6px 0 0}
+.qval small.r{margin:0 0 0 8px}
+.qval.sm{font-size:2.2rem}
+.qval.dim{opacity:.3}
+.qcopy{margin-top:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:9px 16px;font-size:.8rem;font-weight:700;color:var(--hd-ink);min-height:40px}
+.qcopy[hidden]{display:none}
+#quickView[data-r=bcv]{--qc:var(--accent)} #quickView[data-r=eur]{--qc:var(--zl)} #quickView[data-r=bin]{--qc:var(--bn)} #quickView[data-r=otra]{--qc:var(--ink)}
+#quickView[data-r=bcv] .qval{color:var(--hd-link)}
+#quickView[data-r=eur] .qval{color:#c9b8ff}
+#quickView[data-r=bin] .qval{color:var(--hd-amber)}
+.qapp{padding-top:0}
+.qcard{margin-top:-36px;position:relative;z-index:2;padding:12px 14px 14px}
+.qseg{display:grid;grid-template-columns:repeat(var(--n,3),1fr);gap:4px;background:var(--line);border-radius:16px;padding:4px}
+.qseg button{padding:10px 2px;border-radius:12px;font-size:.82rem;font-weight:700;color:var(--ink2);min-height:52px;line-height:1.15}
+.qseg button small{display:block;font-family:var(--mono);font-weight:500;font-size:.7rem;color:var(--ink3);margin-top:3px;letter-spacing:-.02em}
+.qseg button.on{background:var(--card);color:var(--qc);box-shadow:0 1px 4px rgba(14,26,58,.16)}
+.qseg button.on small{color:var(--qc);opacity:.8}
+.qsub{margin:12px 0 4px}
+#quickView .field .u{color:var(--qc)}
+#quickView .field input{caret-color:var(--qc)}
+@media (max-width:360px){.qval{font-size:2.6rem}.bar-in .btn{font-size:.82rem}}
 </style>
 </head>
 <body data-view="home">
@@ -355,18 +386,23 @@ body[data-view=calc] #homeView{display:none}
   <div class="hstamp"><span id="stamp2">Sin actualizar</span><button id="editRates2">Editar tasas</button></div>
 </div>
 <div class="bar"><div class="bar-in">
-  <button class="btn primary" id="goCalc">Abrir calculadora
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  <button class="btn sec" id="goQuick">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8.5 7.5h7M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01"/></svg>
+    Calculadora
+  </button>
+  <button class="btn primary" id="goMonitor">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg>
+    Monitor de tasas
   </button>
 </div></div>
 </div>
 
-<div id="calcView">
+<div id="monitorView">
 <header class="hd"><div class="hd-in">
   <div class="top">
     <div class="tl">
       <button class="back" id="back" aria-label="Volver al inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <div class="title">Calculadora</div>
+      <div class="title">Monitor</div>
     </div>
     <button class="refresh" id="refresh" aria-label="Actualizar tasas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
@@ -412,6 +448,41 @@ body[data-view=calc] #homeView{display:none}
 </div></div>
 </div>
 
+<div id="quickView" data-r="bcv">
+<header class="hd qh"><div class="hd-in">
+  <div class="top">
+    <div class="tl">
+      <button class="back" id="qback" aria-label="Volver al inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="title">Calculadora</div>
+    </div>
+    <button class="refresh" id="refresh3" aria-label="Actualizar tasas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+      Actualizar
+    </button>
+  </div>
+  <div class="qout">
+    <div class="qlab" id="qLab"></div>
+    <div class="qval" id="qVal"></div>
+    <button class="qcopy" id="qCopy" hidden>Copiar resultado</button>
+  </div>
+  <div class="hupd" id="qupd"></div>
+</div></header>
+<div class="app qapp">
+  <div class="amount qcard">
+    <div class="qseg" id="qSeg"></div>
+    <div class="sub qsub"><div class="mini" id="qDir"><button data-d="bs">A bolívares</button><button data-d="usd">Desde bolívares</button></div></div>
+    <label id="qLabel">¿Cuántos dólares?</label>
+    <div class="field">
+      <span class="u" id="qUnit">$</span>
+      <input id="qAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0" aria-labelledby="qLabel">
+      <button class="clear" id="qClear" aria-label="Borrar">✕</button>
+    </div>
+    <div class="quick" id="qQuick"></div>
+  </div>
+  <div class="hstamp"><span>Con las tasas de arriba</span><button data-open="all">Editar tasas</button></div>
+</div>
+</div>
+
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-label="Tasas">
   <div class="sheet-in">
@@ -424,6 +495,7 @@ body[data-view=calc] #homeView{display:none}
       <div class="in"><label>Binance vendes (Bs/USDT)</label><input id="s-bin" inputmode="decimal" placeholder="0,00"></div>
       <div class="in"><label>USDT te cuesta (USD)</label><input id="s-usdt" inputmode="decimal" placeholder="1,02"><div class="h">Lo que pagas por 1 USDT</div></div>
       <div class="in"><label>Otra tasa (Bs)</label><input id="s-otra" inputmode="decimal" placeholder="0,00"><div class="h">Opcional · vacía no se muestra</div></div>
+      <div class="in"><label>Comisión tarjeta (%)</label><input id="s-card" inputmode="decimal" placeholder="4,5"><div class="h">Lo que Facebank cobra de más al pagar directo</div></div>
       <div class="in full"><label>URL del Worker</label><input class="txt" id="s-url" type="url" inputmode="url" placeholder="https://tasas.tu-cuenta.workers.dev" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
     </div>
     <div class="info" id="s-info"></div>
@@ -441,7 +513,7 @@ const ZP = 0.0666;
 const KEY = 'tasas_v3';
 
 // ════════════ ESTADO ════════════
-const S = Object.assign({anchor:'cobro',bsMode:'bs',refRate:'bcv',otra:'',amount:'',bcv:'',eur:'',bin:'',binBuy:'',usdt:'',worker:'',ts:null,src:null}, load());
+const S = Object.assign({anchor:'cobro',bsMode:'bs',refRate:'bcv',cardFee:'4,5',qRate:'bcv',qDir:'bs',otra:'',amount:'',bcv:'',eur:'',bin:'',binBuy:'',usdt:'',worker:'',ts:null,src:null}, load());
 if(!['cobro','zinli','usdt','bs'].includes(S.anchor)){S.anchor='cobro';S.amount=''}
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
@@ -453,6 +525,8 @@ const usd=v=>'$'+f(v);
 const bs=v=>'Bs '+f(v);
 const pct=(v,d=1)=>(v>=0?'+':'')+f(v*100,d)+'%';
 
+// Comisión que Facebank cobra de más al pagar directo con la tarjeta (editable en "Editar tasas")
+const cardFee=()=>{const v=S.cardFee;if(v===''||v==null)return 0.045;const n=parseFloat(String(v).replace(',','.'));return isFinite(n)&&n>=0?n/100:0.045};
 const REF={bcv:'BCV',eur:'euro',bin:'Binance',otra:'Otra'};
 const refVal=()=>num(S[S.refRate]);
 const ANCHORS={
@@ -493,12 +567,13 @@ function calc(){
     out.A={base, zu:base*ZP, cobro:base*ZF, usdt:base/up, bs:base/up*bin};
   }
   if(canB && target){
-    out.B={cobro:target/bcv, bs:target};
+    const cf=cardFee(), bb=target/bcv;
+    out.B={base:bb, fee:bb*cf, cobro:bb*(1+cf), bs:target, cf};
   }
   if(out.A&&out.B){
     out.ahorro=out.B.cobro-out.A.cobro;
     out.ahorroPct=out.ahorro/out.B.cobro;
-    out.binMin=bcv*up*ZF;          // Binance mínimo para que Zinli+USDT iguale a la tarjeta
+    out.binMin=bcv*up*ZF/(1+cardFee());   // Binance mínimo para que Zinli+USDT iguale a la tarjeta (con su comisión)
     out.margen=(bin-out.binMin)/out.binMin;
   }
   return out;
@@ -582,6 +657,7 @@ function renderResult(){
         <div><div class="pk">Facebank te cobra</div><div class="pv s">${usd(B.cobro)}</div></div>
         <div class="rt"><div class="pk">Recibes</div><div class="pv s">${bs(B.bs)}</div></div>
       </div>
+      <div class="line"><span>Incluye comisión de tarjeta (${f(B.cf*100,1)}%)</span><b>${usd(B.fee)}</b></div>
     </div>`;
   }
 
@@ -620,9 +696,9 @@ function renderResult(){
     }
     if(B){
       h+=`<h4>Tarjeta directa</h4>
+      <div class="step"><span>Compra a tasa BCV (${f(r.bcv)})</span><b>${usd(B.base)}</b></div>
+      <div class="step fee"><span>Comisión tarjeta (${f(B.cf*100,1)}%)</span><b>+ ${usd(B.fee)}</b></div>
       <div class="step"><span>Facebank te cobra</span><b>${usd(B.cobro)}</b></div>
-      <div class="step"><span>Sin Zinli, sin USDT</span><b>$0,00 extra</b></div>
-      <div class="step"><span>Tasa BCV</span><b>${f(r.bcv)}</b></div>
       <div class="step"><span>Recibes</span><b>${bs(B.bs)}</b></div>`;
     }
     h+=`</div></details>`;
@@ -653,6 +729,15 @@ function renderConv(r){
     el.hidden=false;el.textContent=`= ${bs(r.target)} a tasa ${REF[S.refRate]} (${f(refVal())})`;
   } else el.hidden=true;
 }
+function renderUpd(h2){
+  const now=new Date();
+  if(S.ts){
+    const d=new Date(S.ts), same=d.toDateString()===now.toDateString();
+    const hr=d.toLocaleTimeString('es-VE',{hour:'numeric',minute:'2-digit'});
+    h2.className='hupd'+((now-d)>6*3600000?' old':'');
+    h2.innerHTML='<i></i><span>Actualizado '+(same?'hoy':d.toLocaleDateString('es-VE',{day:'numeric',month:'short'}))+' · '+hr+'</span>';
+  }else{h2.className='hupd old';h2.innerHTML='<i></i><span>Sin actualizar · toca Actualizar</span>'}
+}
 function renderHome(){
   const bcv=num(S.bcv),eur=num(S.eur),bin=num(S.bin),up=num(S.usdt),ot=num(S.otra);
   const now=new Date();
@@ -660,13 +745,7 @@ function renderHome(){
   $('hdate').innerHTML=cap(now.toLocaleDateString('es-VE',{weekday:'long'}))+'<span>'+now.toLocaleDateString('es-VE',{day:'numeric',month:'long'})+'</span>';
   const hc=(cls,k,v,u,key)=>`<button class="hc ${cls} ${v?'':'empty'}" data-open="${key}"><div><div class="k">${k}</div><div class="u">${u}</div></div><div class="v">${v?f(v,2):'Poner'}</div></button>`;
   $('hero').innerHTML=hc('usd','Dólar BCV',bcv,'Bs por 1 $','bcv')+hc('eur','Euro BCV',eur,'Bs por 1 €','eur');
-  const h2=$('hupd');
-  if(S.ts){
-    const d=new Date(S.ts), same=d.toDateString()===now.toDateString();
-    const hr=d.toLocaleTimeString('es-VE',{hour:'numeric',minute:'2-digit'});
-    h2.className='hupd'+((now-d)>6*3600000?' old':'');
-    h2.innerHTML='<i></i><span>Actualizado '+(same?'hoy':d.toLocaleDateString('es-VE',{day:'numeric',month:'short'}))+' · '+hr+'</span>';
-  }else{h2.className='hupd old';h2.innerHTML='<i></i><span>Sin actualizar · toca Actualizar</span>'}
+  renderUpd($('hupd'));
   const row=(cls,k,v,key,fmtv)=>`<button class="hrow ${cls} ${v?'':'empty'}" data-open="${key}"><span class="hk">${k}</span><span class="hv">${v?fmtv(v):'Poner'}</span></button>`;
   let h=row('bn','Binance (Bs/USDT)',bin,'bin',v=>f(v,2));
   if(bcv&&bin)h+=`<div class="hrow gp"><span class="hk">Brecha vs BCV</span><span class="hv">${pct(bin/bcv-1)}</span></div>`;
@@ -674,7 +753,7 @@ function renderHome(){
   if(ot)h+=row('','Otra',ot,'otra',v=>f(v,2));
   $('hlist').innerHTML=h;
 }
-function renderAll(){renderRates();renderStamp();renderHome();renderAnchor();renderResult()}
+function renderAll(){renderRates();renderStamp();renderHome();renderQuick();renderAnchor();renderResult()}
 
 // ════════════ EVENTOS ════════════
 $('seg').addEventListener('click',e=>{
@@ -707,13 +786,13 @@ $('editRates').addEventListener('click',()=>openSheet('all'));
 $('editRates2').addEventListener('click',()=>openSheet('all'));
 
 // Hoja de tasas
-const FIELDS={'s-bcv':'bcv','s-eur':'eur','s-bin':'bin','s-usdt':'usdt','s-otra':'otra'};
+const FIELDS={'s-bcv':'bcv','s-eur':'eur','s-bin':'bin','s-usdt':'usdt','s-otra':'otra','s-card':'cardFee'};
 function openSheet(focus){
   Object.entries(FIELDS).forEach(([id,k])=>{$(id).value=S[k]===''||S[k]==null?'':String(S[k]).replace('.',',')});
   $('s-url').value=S.worker||WORKER_URL||'';
   info();
   $('sheet').classList.add('on');$('scrim').classList.add('on');
-  const map={bcv:'s-bcv',eur:'s-eur',bin:'s-bin',usdt:'s-usdt',otra:'s-otra'};
+  const map={bcv:'s-bcv',eur:'s-eur',bin:'s-bin',usdt:'s-usdt',otra:'s-otra',card:'s-card'};
   if(map[focus])setTimeout(()=>$(map[focus]).focus(),280);
 }
 function closeSheet(){
@@ -727,7 +806,7 @@ function info(){
 Object.entries(FIELDS).forEach(([id,k])=>{
   $(id).addEventListener('input',e=>{
     e.target.value=e.target.value.replace(/[^\d.,]/g,'');
-    S[k]=e.target.value;save();renderRates();renderHome();renderAnchor();renderResult();
+    S[k]=e.target.value;save();renderRates();renderHome();renderQuick();renderAnchor();renderResult();
   });
 });
 $('s-url').addEventListener('input',e=>{S.worker=e.target.value.trim();save()});
@@ -756,7 +835,7 @@ async function binanceDirecto(){
 async function refresh(silent){
   const url=(S.worker||WORKER_URL||'').trim();
   if(!url){ if(!silent){toast('Falta la URL del Worker');openSheet('all');setTimeout(()=>$('s-url').focus(),300)} return }
-  const btns=[$('refresh'),$('refresh2')];btns.forEach(b=>b.classList.add('spin'));
+  const btns=[...document.querySelectorAll('.refresh')];btns.forEach(b=>b.classList.add('spin'));
   try{
     const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),12000);
     const r=await fetch(url,{signal:ctl.signal});clearTimeout(t);
@@ -780,8 +859,7 @@ async function refresh(silent){
     toast('No pude traer las tasas. Pon las tuyas a mano.');
   }finally{btns.forEach(b=>b.classList.remove('spin'))}
 }
-$('refresh').addEventListener('click',()=>refresh(false));
-$('refresh2').addEventListener('click',()=>refresh(false));
+document.querySelectorAll('.refresh').forEach(b=>b.addEventListener('click',()=>refresh(false)));
 
 // Copiar resumen
 $('copy').addEventListener('click',async()=>{
@@ -789,7 +867,7 @@ $('copy').addEventListener('click',async()=>{
   if(!r.a||(!r.A&&!r.B)){toast('Escribe un monto y completa las tasas');return}
   const L=[`Tasas · ${new Date().toLocaleString('es-VE',{dateStyle:'short',timeStyle:'short'})}`,`Destino: ${bs(r.target)}`];
   if(r.A)L.push(`Zinli + Binance: Facebank cobra ${usd(r.A.cobro)} (base ${usd(r.A.base)} + Zinli ${usd(r.A.zu)}) → ${f(r.A.usdt,2)} USDT → ${bs(r.A.bs)}`);
-  if(r.B)L.push(`Tarjeta BCV: Facebank cobra ${usd(r.B.cobro)}`);
+  if(r.B)L.push(`Tarjeta BCV (+${f(r.B.cf*100,1)}% comisión): Facebank cobra ${usd(r.B.cobro)}`);
   if(r.A&&r.B)L.push(r.ahorro>0?`Conviene Zinli + Binance: ahorras ${usd(r.ahorro)} (${f(r.ahorroPct*100,1)}%)`:r.ahorro<0?`Conviene tarjeta: ahorras ${usd(-r.ahorro)}`:'Mismo costo');
   L.push(`BCV ${f(r.bcv)} · Binance ${f(r.bin)} · USDT $${f(r.up,3)}`+(num(S.otra)?` · Otra ${f(num(S.otra))}`:''));
   const txt=L.join('\n');
@@ -799,22 +877,84 @@ $('copy').addEventListener('click',async()=>{
   toast('Resumen copiado ✓');
 });
 
+
+// ════════════ CALCULADORA RÁPIDA ════════════
+const QR={bcv:{n:'BCV $',u:'$',w:'dólares'},eur:{n:'Euro',u:'€',w:'euros'},bin:{n:'Binance',u:'USDT',w:'USDT'},otra:{n:'Otra',u:'$',w:'dólares'}};
+let qAmt='', qText='';
+function renderQuick(){
+  const keys=['bcv','eur','bin'].concat(num(S.otra)?['otra']:[]);
+  if(!keys.includes(S.qRate))S.qRate='bcv';
+  const k=S.qRate, R=QR[k], rate=num(S[k]), a=num(qAmt), toBs=S.qDir!=='usd';
+  $('quickView').dataset.r=k;
+  $('qSeg').style.setProperty('--n',keys.length);
+  $('qSeg').innerHTML=keys.map(x=>{const v=num(S[x]);return `<button data-k="${x}" class="${x===k?'on':''}">${QR[x].n}<small>${v?f(v,2):'Poner'}</small></button>`}).join('');
+  document.querySelectorAll('#qDir button').forEach(b=>b.classList.toggle('on',b.dataset.d===S.qDir));
+  $('qUnit').textContent=toBs?R.u:'Bs';
+  $('qLabel').textContent=toBs?`¿Cuántos ${R.w}?`:'¿Cuántos bolívares?';
+  const qs=toBs?[10,20,50,100,500]:[1000,5000,10000,20000,50000];
+  $('qQuick').innerHTML=qs.map(n=>`<button data-q="${n}">${f(n,0)}</button>`).join('');
+  const lab=$('qLab'), val=$('qVal'), cp=$('qCopy');
+  cp.hidden=true; qText='';
+  if(!rate){
+    lab.innerHTML=`Falta la tasa ${R.n} · <button data-open="${k}">Poner</button>`;
+    val.className='qval dim'; val.textContent='—';
+  }else if(!a){
+    lab.textContent=`Tasa ${R.n}: ${f(rate)}`;
+    val.className='qval dim'; val.textContent='0,00';
+  }else{
+    const res=toBs?a*rate:a/rate, rs=f(res);
+    const input=toBs?(R.u==='USDT'?f(a)+' USDT':R.u+f(a)):'Bs '+f(a);
+    lab.textContent=`${input} ${toBs?'×':'÷'} ${f(rate)}`;
+    val.className='qval'+(rs.length>11?' sm':'');
+    val.innerHTML=toBs?`<small>Bs</small>${rs}`:(R.u==='USDT'?`${rs}<small class="r">USDT</small>`:`<small>${R.u}</small>${rs}`);
+    qText=`${input} ${toBs?'×':'÷'} ${f(rate)} (${R.n}) = ${toBs?'Bs '+rs:(R.u==='USDT'?rs+' USDT':R.u+rs)}`;
+    cp.hidden=false;
+  }
+  renderUpd($('qupd'));
+}
+$('qSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.qRate=b.dataset.k;save();renderQuick()});
+$('qDir').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||b.dataset.d===S.qDir)return;
+  S.qDir=b.dataset.d;qAmt='';$('qAmount').value='';$('qClear').classList.remove('show');save();renderQuick();
+});
+$('qAmount').addEventListener('input',e=>{
+  qAmt=e.target.value.replace(/[^\d.,]/g,'');
+  if(qAmt!==e.target.value)e.target.value=qAmt;
+  $('qClear').classList.toggle('show',!!qAmt);renderQuick();
+});
+$('qClear').addEventListener('click',()=>{qAmt='';$('qAmount').value='';$('qClear').classList.remove('show');renderQuick();$('qAmount').focus()});
+$('qQuick').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  qAmt=b.dataset.q;$('qAmount').value=qAmt;$('qClear').classList.add('show');renderQuick();
+});
+$('qCopy').addEventListener('click',async()=>{
+  try{await navigator.clipboard.writeText(qText)}catch(e){
+    const t=document.createElement('textarea');t.value=qText;document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch(_){}t.remove();
+  }
+  toast('Copiado ✓');
+});
+
 let tt;
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2600)}
 
 
 // ════════════ NAVEGACIÓN inicio ⇄ calculadora ════════════
+const VIEW_HASH={monitor:'#monitor',quick:'#calculadora'};
 function setView(v){document.body.dataset.view=v;window.scrollTo(0,0)}
-function viewFromHash(){try{return location.hash==='#calc'?'calc':'home'}catch(e){return 'home'}}
-$('goCalc').addEventListener('click',()=>{
-  try{history.pushState({v:'calc'},'','#calc')}catch(e){}   // si el entorno no lo permite, igual abre
-  setView('calc');
-});
-$('back').addEventListener('click',()=>{
-  try{ if(history.state&&history.state.v==='calc'){history.back();return} }catch(e){}
+function viewFromHash(){try{return location.hash==='#monitor'?'monitor':location.hash==='#calculadora'?'quick':'home'}catch(e){return 'home'}}
+function openView(v){
+  try{history.pushState({v},'',VIEW_HASH[v])}catch(e){}   // si el entorno no lo permite, igual abre
+  setView(v);
+  if(v==='quick'){const i=$('qAmount');if(i)i.focus()}
+}
+function goHome(){
+  try{ if(history.state&&history.state.v&&history.state.v!=='home'){history.back();return} }catch(e){}
   try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
   setView('home');
-});
+}
+$('goMonitor').addEventListener('click',()=>openView('monitor'));
+$('goQuick').addEventListener('click',()=>openView('quick'));
+document.querySelectorAll('.back').forEach(b=>b.addEventListener('click',goHome));
 window.addEventListener('popstate',()=>setView(viewFromHash()));
 window.addEventListener('hashchange',()=>setView(viewFromHash()));
 setView(viewFromHash());
